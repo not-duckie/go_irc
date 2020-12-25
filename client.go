@@ -54,6 +54,8 @@ func (c *client)readInput(){
 					client: c,
 					args: args,
 				}
+			
+			case ""," ","\n": 
 			default : c.err(fmt.Errorf("unknown command: %s",cmd))
 
 		}
@@ -65,5 +67,5 @@ func (c *client)err(err error){
 }
 
 func (c *client)msg(msg string){
-	c.conn.Write([]byte("$"+msg+"\n"))
+	c.conn.Write([]byte(msg+"\n"))
 }

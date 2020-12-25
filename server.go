@@ -50,11 +50,19 @@ func (s *server) newClient(conn net.Conn){
 }
 
 func (s *server)nick(c *client,args []string){
+	if len(args) < 2{
+		c.err(errors.New("error in command usage"))
+		return
+	}
 	c.nick = args[1]
 	c.msg(fmt.Sprintf("you nick is now %s",c.nick))
 }
 
 func (s *server)join(c *client,args []string){
+	if len(args) < 2{
+		c.err(errors.New("error in command usage"))
+		return
+	}
 	roomName := args[1]
 	r,ok := s.rooms[roomName]
 	if !ok{
@@ -66,9 +74,8 @@ func (s *server)join(c *client,args []string){
 	}
 	r.members[c.conn.RemoteAddr()] = c
 	if c.room != nil{
-
+		s.quitCurrentRoom(c)
 	}
-	s.quitCurrentRoom(c)
 	c.room = r	
 	r.broadcast(c,fmt.Sprintf("%s has join the chat",c.nick))
 	c.msg(fmt.Sprintf("you have entered the chat %s",r.name))
@@ -82,6 +89,10 @@ func (s *server)listrooms(c *client,args []string){
 }
 
 func (s *server)msg(c *client,args []string){
+	if len(args) < 2{
+		c.err(errors.New("error in command usage"))
+		return
+	}
 	if c.room == nil{
 		c.err(errors.New("you must join a room first"))
 		return
