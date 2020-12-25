@@ -2,7 +2,8 @@ package main
 
 import ("bufio"
 		"net"
-		"strings")
+		"strings"
+		"fmt")
 
 
 type client struct {
@@ -53,16 +54,16 @@ func (c *client)readInput(){
 					client: c,
 					args: args,
 				}
-			default : c.err(fmt.Error("unknown command: %s",cmd))
+			default : c.err(fmt.Errorf("unknown command: %s",cmd))
 
 		}
 	}
 }
 
 func (c *client)err(err error){
-	c.conn.Write([]byte("ERROR: ",err.Error()+"\n"))
+	c.conn.Write([]byte("ERROR: "+err.Error()+"\n"))
 }
 
-func (c *client)err(msg string){
+func (c *client)msg(msg string){
 	c.conn.Write([]byte("$"+msg+"\n"))
 }

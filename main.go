@@ -1,4 +1,7 @@
 package main
+import (
+	"log"
+	"net")
 
 
 func main(){
@@ -15,7 +18,7 @@ func main(){
 		conn,err := listener.Accept()
 		if err!=nil{
 			log.Println("Failed to accept connection")
-			conitnue
+			continue
 		}
 		go s.newClient(conn)
 
